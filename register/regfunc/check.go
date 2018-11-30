@@ -1,9 +1,15 @@
-
-package regfunc 
+package regfunc
 
 import (
 	"fmt"
 	"net/http"
+)
+
+const (
+	UsernameRule = "Username must contain 5-12 characters (include Letter, Digit)"
+	PasswordRule = "Password must contain 6-25 characters"
+	FullnameRule = "Fullname must contain 5-20 characters (include Letter, Space)"
+	BirthdayRule = "Birthday is Invalid"
 )
 
 func isLetter(c byte) bool {
@@ -11,24 +17,24 @@ func isLetter(c byte) bool {
 }
 
 func isNumber(c byte) bool {
-	return '0' <= c && c <= '9';
+	return '0' <= c && c <= '9'
 }
 
-func checkUsername(name string) bool {
+func CheckUsername(name string) bool {
 	if len(name) < 5 || 12 < len(name) {
 		return false
 	}
 
 	for i := 0; i < len(name); i++ {
 		if !isLetter(name[i]) && !isNumber(name[i]) {
-			return false;
+			return false
 		}
 	}
 
-	return true;
+	return true
 }
 
-func checkFullName(name string) bool {
+func CheckFullname(name string) bool {
 	if len(name) < 5 || 20 < len(name) {
 		return false
 	}
@@ -44,45 +50,64 @@ func checkFullName(name string) bool {
 	return true
 }
 
-func checkPassword(pw string) bool {
+func CheckPassword(pw string) bool {
 	if len(pw) < 6 || 25 < len(pw) {
 		return false
 	}
 	return true
 }
 
-func checkBirthday(date string) bool {
+func CheckBirthday(date string) bool {
 	if len(date) != 10 {
 		return false
 	}
 	return true
 }
 
-func Check(w http.ResponseWriter, r *http.Request) bool {
+func RegisterCheck(w http.ResponseWriter, r *http.Request) bool {
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 	fullname := r.FormValue("fullname")
 	birthday := r.FormValue("birthday")
 
-	check:= true
+	check := true
 
-	if !checkUsername(username) {
-		fmt.Fprintln(w, "Username must contain 5-12 characters (include Letter, Digit)")
+	if !CheckUsername(username) {
+		fmt.Fprintln(w, UsernameRule)
 		check = false
 	}
 
-	if !checkPassword(password) {
-		fmt.Fprintln(w, "Password must contain 6-25 characters")
+	if !CheckPassword(password) {
+		fmt.Fprintln(w, PasswordRule)
 		check = false
 	}
 
-	if !checkFullName(fullname) {
-		fmt.Fprintln(w, "Fullname must contain 5-20 characters (include Letter, Space)")
+	if !CheckFullname(fullname) {
+		fmt.Fprintln(w, FullnameRule)
 		check = false
 	}
 
-	if !checkBirthday(birthday) {
-		fmt.Fprintln(w, "Birthday is Invalid")
+	if !CheckBirthday(birthday) {
+		fmt.Fprintln(w, BirthdayRule)
+		check = false
+	}
+
+	return check
+}
+
+func LoginCheck(w http.ResponseWriter, r *http.Request) bool {
+	username := r.FormValue("username")
+	password := r.FormValue("password")
+
+	check := true
+
+	if !CheckUsername(username) {
+		fmt.Fprintln(w, UsernameRule)
+		check = false
+	}
+
+	if !CheckPassword(password) {
+		fmt.Fprintln(w, PasswordRule)
 		check = false
 	}
 

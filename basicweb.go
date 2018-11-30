@@ -1,16 +1,15 @@
-
 package main
 
 import (
 	"fmt"
-	"log"
-	"time"
-	"net/http"
 	"github.com/gorilla/mux"
+	"log"
+	"net/http"
+	"time"
 
+	"github.com/hieutm211/basicweb/home"
 	"github.com/hieutm211/basicweb/login"
 	"github.com/hieutm211/basicweb/register"
-	"github.com/hieutm211/basicweb/home"
 )
 
 func idx_Handler(w http.ResponseWriter, r *http.Request) {
@@ -25,7 +24,7 @@ func idx_Register_Handler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "github.com/hieutm211/basicweb/register/index.html")
 }
 
-func main(){
+func main() {
 	router := mux.NewRouter()
 
 	router.Handle("/", http.HandlerFunc(idx_Handler))
@@ -38,10 +37,10 @@ func main(){
 
 	router.Handle("/home", http.HandlerFunc(home.Handler))
 
-	server := &http.Server {
-		Handler: router,
-		Addr: ":8080",
-		ReadTimeout: 15 * time.Second,
+	server := &http.Server{
+		Handler:      router,
+		Addr:         ":8080",
+		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
 	}
 
